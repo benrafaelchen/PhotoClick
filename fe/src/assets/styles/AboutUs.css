@@ -1,0 +1,21 @@
+.about-us {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.1);
+}
+
+.about-us p {
+  margin-bottom: 20px;
+  color: #00376b; /* Text color */
+  font-size: 1.6rem;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+.about-us h6 {
+  margin-top: 10px;
+  color: black; /* Header color */
+  font-size: 1.4rem;
+}
