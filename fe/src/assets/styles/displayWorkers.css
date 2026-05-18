@@ -1,0 +1,43 @@
+/* displayWorkers.css */
+
+.display-workers-page {
+  width: 100%;
+}
+
+.display-workers-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.display-workers-tab {
+  padding: 1rem 2rem;
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: -2px;
+}
+
+.display-workers-tab:hover { color: var(--color-text); }
+
+.display-workers-tab[aria-selected="true"] {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: 600;
+}
+
+.display-workers-search {
+  margin-bottom: 1.6rem;
+  max-width: 400px;
+}
+
+@media (max-width: 768px) {
+  .display-workers-search { max-width: 100%; }
+}

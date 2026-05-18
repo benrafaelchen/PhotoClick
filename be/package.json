@@ -1,0 +1,45 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.3.1",
+    "express-validator": "^7.3.1",
+    "formidable": "^3.5.2",
+    "google-auth-library": "^10.6.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^1.4.5-lts.2",
+    "mysql": "^2.18.1",
+    "nodejs": "^0.0.0",
+    "nodemailer": "^6.9.15",
+    "react-calendar": "^5.0.0",
+    "react-datepicker": "^8.10.0",
+    "react-icons": "^5.3.0",
+    "recharts": "^2.15.4",
+    "router": "^2.0.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.2",
+    "npm-run-all": "^4.1.5"
+  },
+  "name": "be",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon app.js",
+    "client": "cd ../fe && npm start",
+    "start": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

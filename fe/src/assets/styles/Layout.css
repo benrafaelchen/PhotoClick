@@ -1,0 +1,14 @@
+/* Layout.css - Header & Footer */
+
+.app-header {
+  display: none;
+}
+
+.app-footer {
+  display: none;
+}
+
+.auth-container ~ .app-footer,
+.auth-container ~ footer {
+  display: none;
+}

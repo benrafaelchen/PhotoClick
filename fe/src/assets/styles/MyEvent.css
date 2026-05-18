@@ -1,0 +1,104 @@
+/* MyEvent.css – Photographer Events */
+
+.events-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* Stats bar */
+.events-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.events-stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.4rem 1.6rem;
+  text-align: center;
+}
+
+.events-stat-value {
+  display: block;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1.2;
+}
+
+.events-stat-label {
+  display: block;
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 0.3rem;
+}
+
+/* Filter bar */
+.events-filter-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  padding: 1.2rem 1.6rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Event card */
+.events-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+}
+
+.events-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.events-detail-dl {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 0.5rem 1.2rem;
+  font-size: 1.4rem;
+}
+.events-detail-dl dt {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.events-detail-dl dd {
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Carousel nav */
+.events-carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 600px) {
+  .events-stats-bar { grid-template-columns: 1fr; }
+  .events-filter-bar { flex-direction: column; align-items: stretch; }
+  .events-card-header { flex-direction: column; align-items: flex-start; }
+  .events-detail-dl { grid-template-columns: 1fr; }
+  .events-detail-dl dt { margin-top: 0.4rem; }
+}

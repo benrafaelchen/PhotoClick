@@ -1,0 +1,775 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-photoclick-qa-collection",
+    "name": "PhotoClick API",
+    "description": "Manual API test collection for PhotoClick (Express backend). Aligned with be/routes/api.js.\n\n**Setup:**\n1. Set collection variable `baseUrl` (default http://localhost:8801)\n2. Run Sign In requests; token is saved to `authToken`\n3. Use Bearer auth on protected routes (collection inherits Authorization where configured)\n\n**No real secrets** — use your own test accounts.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8801",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "testOrderNumber",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01 - Authentication",
+      "item": [
+        {
+          "name": "Sign In (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.token) {",
+                  "    pm.collectionVariables.set('customerToken', json.token);",
+                  "    pm.collectionVariables.set('authToken', json.token);",
+                  "  }",
+                  "}",
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userEmail\": \"customer.example@test.com\",\n  \"userPassword\": \"TestPass123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/signin",
+            "description": "Replace email/password with a valid customer test account."
+          }
+        },
+        {
+          "name": "Sign In (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.token) pm.collectionVariables.set('authToken', json.token);",
+                  "}",
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userEmail\": \"admin.example@test.com\",\n  \"userPassword\": \"TestPass123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/signin",
+            "description": "Use a seeded admin account from photodb (RoleID 1)."
+          }
+        },
+        {
+          "name": "Sign In (Photographer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.token) pm.collectionVariables.set('authToken', json.token);",
+                  "}",
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userEmail\": \"photographer.example@test.com\",\n  \"userPassword\": \"TestPass123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/signin"
+          }
+        },
+        {
+          "name": "Sign Up (Customer)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newcustomer.example@test.com\",\n  \"personalId\": \"999888777\",\n  \"password\": \"TestPass123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"Customer\",\n  \"phoneNumber\": \"0501234567\",\n  \"address\": \"123 Test Street, Tel Aviv\",\n  \"roleID\": 2,\n  \"roleName\": \"Customer\"\n}"
+            },
+            "url": "{{baseUrl}}/api/signup"
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userEmail\": \"customer.example@test.com\"\n}"
+            },
+            "url": "{{baseUrl}}/api/forgotpassword"
+          }
+        },
+        {
+          "name": "Google Sign In",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credential\": \"<GOOGLE_ID_TOKEN_PLACEHOLDER>\"\n}"
+            },
+            "url": "{{baseUrl}}/api/google-signin",
+            "description": "Requires valid Google ID token and pre-registered user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - User Profile",
+      "item": [
+        {
+          "name": "Get User Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{baseUrl}}/api/getUserData"
+          }
+        },
+        {
+          "name": "Update User Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"phoneNumber\": \"0501234567\",\n  \"address\": \"123 Test Street\"\n}"
+            },
+            "url": "{{baseUrl}}/api/updateUserData"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Orders Catalog (Public)",
+      "item": [
+        {
+          "name": "Get Event Types",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getEventTypes"
+          }
+        },
+        {
+          "name": "Get Prices",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getPrices"
+          }
+        },
+        {
+          "name": "Get Pack Styles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getPackStyles"
+          }
+        },
+        {
+          "name": "Get Work Stills",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getWorkStils"
+          }
+        },
+        {
+          "name": "Get Photographer Limits",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getPhotographerLimits"
+          }
+        },
+        {
+          "name": "Get Photographer Caps (alias)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getPhotographerCaps"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Orders (Customer)",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Created or success', () => {",
+                  "  pm.expect([200, 201]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventType\": \"Wedding Party\",\n  \"packStyle\": \"bronze\",\n  \"serialPack\": 201,\n  \"eventDate\": \"2026-08-15\",\n  \"eventTime\": \"18:00\",\n  \"eventPrice\": 2850,\n  \"place\": { \"name\": \"Test Venue Hall\" },\n  \"quantities\": {},\n  \"dynamicDescription\": \"Includes: 1 Photographers Stills, 1 Photographers Video, 2 Albums (30X80 CM), 500 Magnets (10X12 CM).\"\n}"
+            },
+            "url": "{{baseUrl}}/api/createOrder",
+            "description": "Uses customerToken. Sign in as customer first."
+          }
+        },
+        {
+          "name": "Get User Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{baseUrl}}/api/getUserOrders"
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Orders (Admin)",
+      "item": [
+        {
+          "name": "Get Total Orders",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getTotalOrders"
+          }
+        },
+        {
+          "name": "Get Orders At Date",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"2026-01-15\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getOrdersAtDate"
+          }
+        },
+        {
+          "name": "Get Assigned Orders",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"2026-01-15\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getAssignedOrders"
+          }
+        },
+        {
+          "name": "Approve Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": {{testOrderNumber}}\n}"
+            },
+            "url": "{{baseUrl}}/api/approveOrder",
+            "description": "Set testOrderNumber collection variable to a pending order ID."
+          }
+        },
+        {
+          "name": "Reject Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": {{testOrderNumber}}\n}"
+            },
+            "url": "{{baseUrl}}/api/rejectOrder"
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Workers",
+      "item": [
+        {
+          "name": "Get Workers",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/getWorkers" }
+        },
+        {
+          "name": "Get Customers",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/getCustomers" }
+        },
+        {
+          "name": "Get Available Workers",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"2026-01-15\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getAvailableWorkers"
+          }
+        },
+        {
+          "name": "Get Workers For Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": 1040\n}"
+            },
+            "url": "{{baseUrl}}/api/getWorkersForOrder"
+          }
+        },
+        {
+          "name": "Assign Workers",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": 1040,\n  \"workers\": [{ \"personalId\": \"111111111\" }]\n}"
+            },
+            "url": "{{baseUrl}}/api/assignWorkers"
+          }
+        },
+        {
+          "name": "Get Assigned Workers For Assigned Orders",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{baseUrl}}/api/getAssignedWorkersForAssignedOrders"
+          }
+        },
+        {
+          "name": "Get Orders For Worker (Photographer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{baseUrl}}/api/getOrdersForWorker",
+            "description": "Use photographer token in authToken."
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Events",
+      "item": [
+        {
+          "name": "Get Event Names",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getEventNames"
+          }
+        },
+        {
+          "name": "Get Event Dates",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getEventDates"
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - FAQ",
+      "item": [
+        {
+          "name": "Get FAQ Data",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/faqData"
+          }
+        },
+        {
+          "name": "Add FAQ (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"faq_title\": \"QA Test Question\",\n    \"faq_content\": \"QA Test Answer content.\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/api/addFaq"
+          }
+        },
+        {
+          "name": "Delete FAQ (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": 10\n}"
+            },
+            "url": "{{baseUrl}}/api/deleteFaq"
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 - Pages (About Us)",
+      "item": [
+        {
+          "name": "Get About Us Data",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/aboutUsData"
+          }
+        },
+        {
+          "name": "Edit Page Content (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_content\": \"Updated About Us main content for QA testing.\",\n  \"page_info\": \"Updated supplementary info for QA testing.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/editPageContent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 - Reports (Admin)",
+      "item": [
+        {
+          "name": "Get Revenue",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromDate\": \"2026-01-01\",\n  \"toDate\": \"2026-01-31\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getRevenue"
+          }
+        },
+        {
+          "name": "Get Expenses",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromDate\": \"2026-01-01\",\n  \"toDate\": \"2026-01-31\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getExpenses"
+          }
+        },
+        {
+          "name": "Get Customer Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromDate\": \"2026-01-01\",\n  \"toDate\": \"2026-01-31\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getCustomerReport"
+          }
+        },
+        {
+          "name": "Get Worker Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromDate\": \"2026-01-01\",\n  \"toDate\": \"2026-01-31\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getWorkerReport"
+          }
+        },
+        {
+          "name": "Get Order Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromDate\": \"2026-01-01\",\n  \"toDate\": \"2026-01-31\"\n}"
+            },
+            "url": "{{baseUrl}}/api/getOrderReport"
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 - Gallery / Images",
+      "item": [
+        {
+          "name": "Get Images",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/getImages"
+          }
+        },
+        {
+          "name": "Upload Images (Admin)",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select a JPEG/PNG/GIF/WebP file (max 10MB)"
+                },
+                {
+                  "key": "eventType",
+                  "value": "wedding",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/uploadImages",
+            "description": "Multipart form-data. Do not set Content-Type manually."
+          }
+        },
+        {
+          "name": "Delete Image (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"imageId\": 56,\n  \"imageName\": \"example.jpg\"\n}"
+            },
+            "url": "{{baseUrl}}/api/deleteImage",
+            "description": "Use real imageId and imageName from GET /getImages response."
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 - Negative Tests",
+      "item": [
+        {
+          "name": "Get User Data - No Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": "{{baseUrl}}/api/getUserData"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Unauthorized', () => pm.response.to.have.status(401));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Approve Order - Customer Token (403)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{customerToken}}", "type": "string" }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": 1040\n}"
+            },
+            "url": "{{baseUrl}}/api/approveOrder"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Forbidden for customer', () => pm.response.to.have.status(403));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sign In - Invalid Credentials",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userEmail\": \"notfound@test.com\",\n  \"userPassword\": \"WrongPass99\"\n}"
+            },
+            "url": "{{baseUrl}}/api/signin"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Bad request', () => pm.response.to.have.status(400));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
